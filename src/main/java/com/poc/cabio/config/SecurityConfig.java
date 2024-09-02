@@ -2,6 +2,7 @@ package com.poc.cabio.config;
 
 import com.poc.cabio.jwt.AuthEntryPoint;
 import com.poc.cabio.jwt.JwtAuthFilter;
+import com.poc.cabio.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -57,7 +58,7 @@ public class SecurityConfig {
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(unAuthorizeHandler))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests( auth ->
-                        auth.requestMatchers("v1/auth/sendotp/","/v1/auth/login","/v1/auth/signup","/v1/superAdmin/display","/v1/superAdmin/addRestaurant","/v1/admin/addFoodItem","/v1/admin/displaymenu","/v1/auth/check","/v1/auth/generateToken","/v1/auth/resetPassword","/v1/auth/resend","/swagger-ui/index.html","/swagger-ui/", "/swagger-ui/**","/v2/**","/v3/**","/webjars/**","/swagger-resources/**","/actuator/**","/swagger-ui.html").permitAll()
+                        auth.requestMatchers("v1/auth/sendotp/","/v1/auth/login","/v1/auth/signup","/swagger-ui/index.html","/swagger-ui/", "/swagger-ui/**","/v2/**","/v3/**","/webjars/**","/swagger-resources/**","/actuator/**","/swagger-ui.html").permitAll()
                                 .anyRequest().permitAll()
 
 

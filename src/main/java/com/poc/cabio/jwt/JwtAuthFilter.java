@@ -1,5 +1,6 @@
 package com.poc.cabio.jwt;
 
+import com.poc.cabio.service.UserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
