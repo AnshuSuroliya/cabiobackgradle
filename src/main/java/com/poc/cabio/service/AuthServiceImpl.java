@@ -1,6 +1,7 @@
 package com.poc.cabio.service;
 
 import com.poc.cabio.exception.UserException;
+import com.poc.cabio.exception.ValidationException;
 import com.poc.cabio.jwt.JwtService;
 import com.poc.cabio.model.User;
 import com.poc.cabio.repository.UserRepository;
@@ -62,21 +63,21 @@ public class AuthServiceImpl implements AuthService{
             User user1 = userRepository.findByEmail(signupRequest.getEmail().toLowerCase());
             BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
-            if(validationService.nameValidation(signupRequest.getName())){
-                log.info("Provided first name is not correct");
+            if(!validationService.nameValidation(signupRequest.getName())){
+                log.info("Provided name is not correct");
                 SignupResponse signupResponse=new SignupResponse();
-                signupResponse.setMessage("Provided first name is not correct");
+                signupResponse.setMessage("Provided name is not correct");
                 signupResponse.setSuccess(false);
                 return new ResponseEntity<>(signupResponse,HttpStatus.OK);
             }
-            if(validationService.mobileNumber(signupRequest.getMobileNumber())){
+            if(!validationService.mobileNumber(signupRequest.getMobileNumber())){
                 log.info("Provided Contact Number is not correct");
                 SignupResponse signupResponse = new SignupResponse();
                 signupResponse.setMessage("Provided Contact Number is not correct");
                 signupResponse.setSuccess(false);
                 return new ResponseEntity<>(signupResponse,HttpStatus.OK);
             }
-            if(validationService.emailValidation(signupRequest.getEmail())){
+            if(!validationService.emailValidation(signupRequest.getEmail())){
                 log.info("Provided email is not correct");
                 SignupResponse signupResponse=new SignupResponse();
                 signupResponse.setMessage("Provided email is not correct");
@@ -117,10 +118,13 @@ public class AuthServiceImpl implements AuthService{
     }
 
     @Override
-    public ResponseEntity<LoginResponse> login(LoginRequest loginRequest) throws UserException {
+    public ResponseEntity<LoginResponse> login(LoginRequest loginRequest) throws UserException,ValidationException {
 
         try {
             User user = userRepository.findByEmail(loginRequest.getEmail().toLowerCase());
+            if(!validationService.emailValidation(loginRequest.getEmail())){
+                    throw new ValidationException("Invalid");
+            }
             if (user == null) {
                 LoginResponse loginResponse = new LoginResponse();
                 loginResponse.setMessage("Email doesn't exist");
@@ -148,7 +152,15 @@ public class AuthServiceImpl implements AuthService{
                 log.info("Wrong Password");
                 return new ResponseEntity<>(HttpStatus.OK);
             }
-        }catch (NullPointerException e){
+        }catch (ValidationException e){
+            LoginResponse loginResponse=new LoginResponse();
+            loginResponse.setMessage("Email must be like test@example.com");
+            loginResponse.setJwt(null);
+            loginResponse.setSuccess(false);
+            log.info("Email must be like test@example.com");
+            return new ResponseEntity<>(loginResponse,HttpStatus.OK);
+        }
+        catch (NullPointerException e){
             LoginResponse loginResponse=new LoginResponse();
             loginResponse.setMessage("Email is null");
             return new ResponseEntity<>(loginResponse,HttpStatus.OK);

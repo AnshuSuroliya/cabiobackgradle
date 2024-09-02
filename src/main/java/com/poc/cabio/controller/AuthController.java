@@ -1,6 +1,7 @@
 package com.poc.cabio.controller;
 
 import com.poc.cabio.exception.UserException;
+import com.poc.cabio.exception.ValidationException;
 import com.poc.cabio.request.LoginRequest;
 import com.poc.cabio.request.OtpRequest;
 import com.poc.cabio.request.SignupRequest;
@@ -24,7 +25,7 @@ public class AuthController {
         return authService.signup(signupRequest);
     }
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse>login(@RequestBody LoginRequest loginRequest)throws UserException{
+    public ResponseEntity<LoginResponse>login(@RequestBody LoginRequest loginRequest)throws UserException, ValidationException {
         return authService.login(loginRequest);
     }
     @PostMapping("/sendotp")

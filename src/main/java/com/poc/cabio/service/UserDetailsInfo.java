@@ -13,7 +13,7 @@ public class UserDetailsInfo implements UserDetails {
     private List<GrantedAuthority> authorities;
     public UserDetailsInfo(User user) {
         email = user.getEmail();
-
+        password=user.getPassword();
     }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -22,7 +22,7 @@ public class UserDetailsInfo implements UserDetails {
 
     @Override
     public String getPassword() {
-        return null;
+        return password;
     }
 
 
